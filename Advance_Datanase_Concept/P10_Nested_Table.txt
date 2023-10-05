@@ -1,0 +1,128 @@
+Practical=10 (6-5)
+Aim:- Nested Table of Local Type
+
+DECLARE
+  TYPE Roster IS TABLE OF VARCHAR2(15);  -- nested table type
+ 
+  -- nested table variable initialized with constructor:
+ 
+  names Roster := Roster('D Caruso', 'J Hamil', 'D Piro', 'R Singh');
+ 
+  PROCEDURE print_names (heading VARCHAR2) IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE(heading);
+ 
+    FOR i IN names.FIRST .. names.LAST LOOP  -- For first to last element
+      DBMS_OUTPUT.PUT_LINE(names(i));
+    END LOOP;
+ 
+    DBMS_OUTPUT.PUT_LINE('---');
+  END;
+  
+BEGIN 
+  print_names('Initial Values:');
+ 
+  names(3) := 'P Perez';  -- Change value of one element
+  print_names('Current Values:');
+ 
+  names := Roster('A Jansen', 'B Gupta');  -- Change entire table
+  print_names('Current Values:');
+END;
+/
+Output:-
+
+Initial Values:
+D Caruso
+J Hamil
+D Piro
+R Singh
+---
+Current Values:
+D Caruso
+J Hamil
+P Perez
+R Singh
+---
+Current Values:
+A Jansen
+B Gupta
+
+
+
+
+Practical=10 (6-6)
+Aim:-Nested Table of Standalone Type
+
+CREATE OR REPLACE TYPE nt_type IS TABLE OF NUMBER;
+/
+CREATE OR REPLACE PROCEDURE print_nt (nt nt_type) AUTHID DEFINER IS
+  i  NUMBER;
+BEGIN
+  i := nt.FIRST;
+ 
+  IF i IS NULL THEN
+    DBMS_OUTPUT.PUT_LINE('nt is empty');
+  ELSE
+    WHILE i IS NOT NULL LOOP
+      DBMS_OUTPUT.PUT('nt.(' || i || ') = ');
+      DBMS_OUTPUT.PUT_LINE(NVL(TO_CHAR(nt(i)), 'NULL'));
+      i := nt.NEXT(i);
+    END LOOP;
+  END IF;
+ 
+  DBMS_OUTPUT.PUT_LINE('---');
+END print_nt;
+/
+DECLARE
+  nt nt_type := nt_type();  -- nested table variable initialized to empty
+BEGIN
+  print_nt(nt);
+  nt := nt_type(90, 9, 29, 58);
+  print_nt(nt);
+END;
+/
+Output
+nt is empty
+---
+nt.(1) = 90
+nt.(2) = 9
+nt.(3) = 29
+nt.(4) = 58
+---
+
+
+
+
+Practical=10 (6-15) 
+Aim:- Assigning Null Value to Nested Table Variable
+
+DECLARE
+  TYPE dnames_tab IS TABLE OF VARCHAR2(30);
+ 
+  dept_names dnames_tab := dnames_tab(
+    'Shipping','Sales','Finance','Payroll');  -- Initialized to non-null value
+ 
+  empty_set dnames_tab;  -- Not initialized, therefore null
+ 
+  PROCEDURE print_dept_names_status IS
+  BEGIN
+    IF dept_names IS NULL THEN
+      DBMS_OUTPUT.PUT_LINE('dept_names is null.');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('dept_names is not null.');
+    END IF;
+  END  print_dept_names_status;
+ 
+BEGIN
+  print_dept_names_status;
+  dept_names := empty_set;  -- Assign null collection to dept_names.
+  print_dept_names_status;
+  dept_names := dnames_tab (
+    'Shipping','Sales','Finance','Payroll');  -- Re-initialize dept_names
+  print_dept_names_status;
+END;
+/
+Output:
+dept_names is not null.
+dept_names is null.
+dept_names is not null.
