@@ -33,6 +33,42 @@ END;
 /
 
 C] Write a PL/SQL block to create a function to find the total strength of Students using functions present in different departments.
+CREATE OR REPLACE FUNCTION GetDepartmentAStrength RETURN NUMBER IS
+    departmentA_strength NUMBER := 100; -- Assuming 100 students in Department A
+BEGIN
+    RETURN departmentA_strength;
+END GetDepartmentAStrength;
+/
+
+CREATE OR REPLACE FUNCTION GetDepartmentBStrength RETURN NUMBER IS
+    departmentB_strength NUMBER := 150; -- Assuming 150 students in Department B
+BEGIN
+    RETURN departmentB_strength;
+END GetDepartmentBStrength;
+/
+
+CREATE OR REPLACE FUNCTION TotalStudentStrength RETURN NUMBER IS
+    total_strength NUMBER;
+BEGIN
+    -- Call the functions to get department-wise strengths and calculate the total strength
+    total_strength := GetDepartmentAStrength() + GetDepartmentBStrength();
+
+    RETURN total_strength;
+END TotalStudentStrength;
+/
+
+-- Usage example
+DECLARE
+    total_strength NUMBER;
+BEGIN
+    total_strength := TotalStudentStrength();
+    DBMS_OUTPUT.PUT_LINE('Total student strength: ' || total_strength);
+END;
+/
+OUTPUT:
+Total student strength: 250
+
+
 
 D] Writing a recursive Functions in PL/SQL Block.
 DECLARE
