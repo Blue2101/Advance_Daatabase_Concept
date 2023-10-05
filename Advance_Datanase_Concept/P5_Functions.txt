@@ -23,14 +23,16 @@ END;
 /
 B] Write a PL/SQL block to create a function to find square of a number.
 
-DECLARE
-    my_value NUMBER := 5;
-    squared_numbers NUMBER;
+CREATE OR REPLACE FUNCTION calculate_square(
+    num IN NUMBER
+)
+RETURN NUMBER
+IS
+    result NUMBER;
 BEGIN
-squared_numbers := calculate_square(my_value);
-DBMS_OUTPUT.PUT_LINE('The square of : ' || my_value||' is '||squared_numbers);
-END;
-/
+    result := num * num;
+    RETURN result;
+END calculate_square;
 
 C] Write a PL/SQL block to create a function to find the total strength of Students using functions present in different departments.
 CREATE OR REPLACE FUNCTION GetDepartmentAStrength RETURN NUMBER IS
