@@ -1,0 +1,130 @@
+Practical=6 (10-1) 
+Aim:-Trigger Uses Conditional Predicates to Detect Triggering Statement
+
+CREATE OR REPLACE TRIGGER t
+  BEFORE
+    INSERT OR
+    UPDATE OF salary, department_id OR
+    DELETE
+  ON employees
+BEGIN
+  CASE
+    WHEN INSERTING THEN
+      DBMS_OUTPUT.PUT_LINE('Inserting');
+    WHEN UPDATING('salary') THEN
+      DBMS_OUTPUT.PUT_LINE('Updating salary');
+    WHEN UPDATING('department_id') THEN
+      DBMS_OUTPUT.PUT_LINE('Updating department ID');
+    WHEN DELETING THEN
+      DBMS_OUTPUT.PUT_LINE('Deleting');
+  END CASE;
+END;
+/
+
+
+
+Practical=6 10-2  
+Aim:- Trigger for INSTEAD OF.
+
+CREATE OR REPLACE VIEW order_info AS
+   SELECT c.customer_id, c.cust_last_name, c.cust_first_name,
+          o.order_id, o.order_date, o.order_status
+   FROM customers c, orders o
+   WHERE c.customer_id = o.customer_id;
+
+CREATE OR REPLACE TRIGGER order_info_insert
+   INSTEAD OF INSERT ON order_info
+   DECLARE
+     duplicate_info EXCEPTION;
+     PRAGMA EXCEPTION_INIT (duplicate_info, -00001);
+   BEGIN
+     INSERT INTO customers
+       (customer_id, cust_last_name, cust_first_name)
+     VALUES (
+     :new.customer_id,
+     :new.cust_last_name,
+     :new.cust_first_name);
+   INSERT INTO orders (order_id, order_date, customer_id)
+   VALUES (
+     :new.order_id,
+     :new.order_date,
+     :new.customer_id);
+   EXCEPTION
+     WHEN duplicate_info THEN
+       RAISE_APPLICATION_ERROR (
+         num=> -20107,
+         msg=> 'Duplicate customer or order ID');
+   END order_info_insert;
+/
+
+SELECT COUNT(*) FROM order_info WHERE customer_id = 999;
+
+Output:-
+  COUNT(*)
+----------
+         0
+ 
+1 row selected.
+
+INSERT INTO order_info VALUES
+   (999, 'Smith', 'John', 2500, TO_DATE('13-MAR-2001', 'DD-MON-YYYY'), 0);
+
+Output:-
+1 row created.
+
+SELECT COUNT(*) FROM order_info WHERE customer_id = 999;
+
+Output:-
+  COUNT(*)
+----------
+         1
+ 
+1 row selected.
+
+
+SELECT COUNT(*) FROM orders WHERE customer_id = 999;
+
+Output:-
+  COUNT(*)
+----------
+         1
+ 
+1 row selected.
+
+
+
+
+Practical=6 10-14
+Aim:- Trigger Logs Changes to EMPLOYEES.SALARY
+
+DROP TABLE Emp_log;
+CREATE TABLE Emp_log (
+  Emp_id     NUMBER,
+  Log_date   DATE,
+  New_salary NUMBER,
+  Action     VARCHAR2(20));
+ 
+CREATE OR REPLACE TRIGGER log_salary_increase
+  AFTER UPDATE OF salary ON employees
+  FOR EACH ROW
+BEGIN
+  INSERT INTO Emp_log (Emp_id, Log_date, New_salary, Action)
+  VALUES (:NEW.employee_id, SYSDATE, :NEW.salary, 'New Salary');
+END;
+/
+
+UPDATE employees
+SET salary = salary + 1000.0
+WHERE Department_id = 20;
+ Output:-
+2 rows updated.
+ 
+SELECT * FROM Emp_log;
+ 
+Output:-
+    EMP_ID LOG_DATE  NEW_SALARY ACTION
+---------- --------- ---------- --------------------
+       201 28-APR-10      13650 New Salary
+       202 28-APR-10       6300 New Salary
+ 
+2 rows selected.
