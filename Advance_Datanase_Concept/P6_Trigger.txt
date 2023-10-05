@@ -128,3 +128,66 @@ Output:-
        202 28-APR-10       6300 New Salary
  
 2 rows selected.
+
+
+
+Practical=6 (10-15)
+Aim: Salary difference
+
+CREATE OR REPLACE TRIGGER print_salary_changes
+  BEFORE DELETE OR INSERT OR UPDATE ON employees
+  FOR EACH ROW
+  WHEN (NEW.job_id <> 'AD_PRES')  -- do not print information about President
+DECLARE
+  sal_diff  NUMBER;
+BEGIN
+  sal_diff  := :NEW.salary  - :OLD.salary;
+  DBMS_OUTPUT.PUT(:NEW.last_name || ': ');
+  DBMS_OUTPUT.PUT('Old salary = ' || :OLD.salary || ', ');
+  DBMS_OUTPUT.PUT('New salary = ' || :NEW.salary || ', ');
+  DBMS_OUTPUT.PUT_LINE('Difference: ' || sal_diff);
+END;
+/
+
+Query:
+SELECT last_name, department_id, salary, job_id
+FROM employees
+WHERE department_id IN (10, 20, 90)
+ORDER BY department_id, last_name;
+ Output:-
+LAST_NAME                 DEPARTMENT_ID     SALARY JOB_ID
+------------------------- ------------- ---------- ----------
+Whalen                               10       4200 AD_ASST
+Fay                                  20       6000 MK_REP
+Hartstein                            20      13000 MK_MAN
+De Haan                              90      17000 AD_VP
+King                                 90      24000 AD_PRES
+Kochhar                              90      17000 AD_VP
+ 
+6 rows selected.
+
+Triggering Statement:-
+
+UPDATE employees
+SET salary = salary * 1.05
+WHERE department_id IN (10, 20, 90);
+
+Output:-
+Whalen: Old salary = 4200, New salary = 4410, Difference: 210
+Hartstein: Old salary = 13000, New salary = 13650, Difference: 650
+Fay: Old salary = 6000, New salary = 6300, Difference: 300
+Kochhar: Old salary = 17000, New salary = 17850, Difference: 850
+De Haan: Old salary = 17000, New salary = 17850, Difference: 850
+ 
+6 rows updated.
+
+Query:-
+SELECT salary FROM employees WHERE job_id = 'AD_PRES';
+
+Output:-
+
+    SALARY
+----------
+     25200
+ 
+1 row selected.
