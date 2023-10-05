@@ -1,0 +1,111 @@
+Aim:-No_Data_Found
+DECLARE
+   temp varchar(20); 
+  
+BEGIN
+   SELECT g_id into temp from geeks where g_name='GeeksforGeeks'; 
+  
+exception 
+   WHEN no_data_found THEN
+      dbms_output.put_line('ERROR'); 
+      dbms_output.put_line('there is no name as'); 
+      dbms_output.put_line('GeeksforGeeks in geeks table'); 
+end; 
+
+
+Aim:- Too_Many_Rows
+DECLARE
+temp varchar(20); 
+
+BEGIN
+
+-- raises an exception as SELECT 
+-- into trying to return too many rows 
+SELECT g_name into temp from geeks; 
+dbms_output.put_line(temp); 
+
+EXCEPTION 
+WHEN too_many_rows THEN
+	dbms_output.put_line('error trying to SELECT too many rows'); 
+
+end; 
+
+
+
+Aim:- Value_Error
+DECLARE
+temp number; 
+
+BEGIN
+SELECT g_name into temp from geeks where g_name='Suraj'; 
+dbms_output.put_line('the g_name is '||temp); 
+
+EXCEPTION 
+WHEN value_error THEN
+dbms_output.put_line('Error'); 
+dbms_output.put_line('Change data type of temp to varchar(20)'); 
+
+END; 
+
+
+Aim:-Zero Divide
+DECLARE
+a int:=10; 
+b int:=0; 
+answer int; 
+
+BEGIN
+answer:=a/b; 
+dbms_output.put_line('the result after division is'||answer); 
+
+exception 
+WHEN zero_divide THEN
+	dbms_output.put_line('dividing by zero please check the values again'); 
+	dbms_output.put_line('the value of a is '||a); 
+	dbms_output.put_line('the value of b is '||b); 
+END; 
+
+
+
+
+
+Aim:-User defined Exceptions 
+
+CREATE PROCEDURE account_status (
+  due_date DATE,
+  today    DATE
+) AUTHID DEFINER
+IS
+  past_due  EXCEPTION;  -- declare exception
+BEGIN
+  IF due_date < today THEN
+    RAISE past_due;  -- explicitly raise exception
+  END IF;
+EXCEPTION
+  WHEN past_due THEN  -- handle exception
+    DBMS_OUTPUT.PUT_LINE ('Account past due.');
+END;
+/
+ 
+BEGIN
+  account_status (TO_DATE('01-JUL-2010', 'DD-MON-YYYY'),
+                  TO_DATE('09-JUL-2010', 'DD-MON-YYYY'));
+END;
+/
+
+
+
+
+Aim:- Redeclared Predefined Exceptions -
+DECLARE
+  default_number NUMBER := 0;
+  i NUMBER := 5;
+  invalid_number EXCEPTION;    -- redeclare predefined exception
+BEGIN
+  INSERT INTO t VALUES(TO_NUMBER('100.00', '9G999'));
+EXCEPTION
+  WHEN INVALID_NUMBER THEN
+    DBMS_OUTPUT.PUT_LINE('Substituting default value for invalid number.');
+    INSERT INTO t VALUES(default_number);
+END;
+/
