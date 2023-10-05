@@ -62,14 +62,16 @@ BEGIN
 END;
   /
 
- CREATE TABLE employee(
+
+4. define procedure to insert data.
+
+CREATE TABLE employee(
   employee_id NUMBER,
    first_name VARCHAR2(50),
    last_name VARCHAR2(50),
    salary NUMBER
    );
 
-4. define procedure to insert data.
  CREATE OR REPLACE PROCEDURE
    insert_employee(
     p_employee_id NUMBER,
