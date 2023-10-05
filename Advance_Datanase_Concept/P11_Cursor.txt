@@ -1,63 +1,113 @@
+-- FIRST CREATE THE TABLE BELOW THEN RUN PROGRAM
+
+-- Create a sample employees table
+CREATE TABLE employees (
+    employee_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50)
+);
+
+
+--%isopen
+-- Insert some sample data into the employees table
+INSERT INTO employees (employee_id, first_name, last_name)
+VALUES (1, 'John', 'Doe');
+
+INSERT INTO employees (employee_id, first_name, last_name)
+VALUES (2, 'Alice', 'Smith');
 DECLARE
-  -- Declare a cursor
-  CURSOR my_cursor IS
-    SELECT * FROM your_table;
-
-  -- Variables to store cursor attributes
-  cursor_open BOOLEAN := FALSE;
-  cursor_found BOOLEAN := FALSE;
-  cursor_notfound BOOLEAN := FALSE;
-  cursor_rowcount NUMBER := 0;
-
+    CURSOR c_employee IS
+        SELECT employee_id, first_name, last_name
+        FROM employees;
 BEGIN
-  -- Open the cursor
-  OPEN my_cursor;
-  cursor_open := TRUE;
-
-  -- Fetch a row from the cursor
-  FETCH my_cursor INTO some_variable;
-
-  -- Check cursor attributes
-  IF my_cursor%ISOPEN THEN
-    cursor_open := TRUE;
-    DBMS_OUTPUT.PUT_LINE('Cursor is open.');
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Cursor is not open.');
-  END IF;
-
-  IF my_cursor%FOUND THEN
-    cursor_found := TRUE;
-    DBMS_OUTPUT.PUT_LINE('Cursor has found a row.');
-  ELSE
-    cursor_notfound := TRUE;
-    DBMS_OUTPUT.PUT_LINE('Cursor has not found a row.');
-  END IF;
-
-  IF my_cursor%NOTFOUND THEN
-    cursor_notfound := TRUE;
-    DBMS_OUTPUT.PUT_LINE('Cursor has not found a row.');
-  ELSE
-    cursor_found := TRUE;
-    DBMS_OUTPUT.PUT_LINE('Cursor has found a row.');
-  END IF;
-
-  cursor_rowcount := my_cursor%ROWCOUNT;
-  DBMS_OUTPUT.PUT_LINE('Cursor row count: ' || cursor_rowcount);
-
-  -- Close the cursor
-  CLOSE my_cursor;
-
-  -- Check cursor attributes after closing
-  IF my_cursor%ISOPEN THEN
-    DBMS_OUTPUT.PUT_LINE('Cursor is still open.');
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Cursor is closed.');
-  END IF;
-
-EXCEPTION
-  WHEN OTHERS THEN
-    IF my_cursor%ISOPEN THEN
-      CLOSE my_cursor; -- Close the cursor in case of an exception
+    OPEN c_employee; -- Open the cursor
+    
+    IF c_employee%ISOPEN THEN
+        DBMS_OUTPUT.PUT_LINE('Cursor is open.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Cursor is not open.');
     END IF;
-    RAISE;
+    
+    CLOSE c_employee; -- Close the cursor
 END;
+/
+
+--%found
+
+DECLARE
+    cursor c_employee IS
+        SELECT employee_id, first_name, last_name
+        FROM employees;
+    
+    v_employee_id NUMBER;
+    v_first_name VARCHAR2(50);
+    v_last_name VARCHAR2(50);
+BEGIN
+    OPEN c_employee;
+    
+    FETCH c_employee INTO v_employee_id, v_first_name, v_last_name;
+    
+    IF c_employee%FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Row found: ' || v_employee_id || ', ' || v_first_name || ', ' || v_last_name);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No row found.');
+    END IF;
+    
+    CLOSE c_employee;
+END;
+/
+
+--%notfound
+DECLARE
+    cursor c_employee IS
+        SELECT employee_id, first_name, last_name
+        FROM employees;
+    
+    v_employee_id NUMBER;
+    v_first_name VARCHAR2(50);
+    v_last_name VARCHAR2(50);
+BEGIN
+    OPEN c_employee;
+    
+    FETCH c_employee INTO v_employee_id, v_first_name, v_last_name;
+    
+    IF c_employee%NOTFOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No more rows found.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Row found: ' || v_employee_id || ', ' || v_first_name || ', ' || v_last_name);
+    END IF;
+    
+    CLOSE c_employee;
+END;
+/
+
+
+--%rowcount
+
+DECLARE
+    cursor c_employee IS
+        SELECT employee_id, first_name, last_name
+        FROM employees;
+    
+    v_employee_id NUMBER;
+    v_first_name VARCHAR2(50);
+    v_last_name VARCHAR2(50);
+    v_rowcount NUMBER := 0;
+BEGIN
+    OPEN c_employee;
+    
+    LOOP
+        FETCH c_employee INTO v_employee_id, v_first_name, v_last_name;
+        
+        EXIT WHEN c_employee%NOTFOUND;
+        
+        v_rowcount := v_rowcount + 1;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE('Total Rows Fetched: ' || v_rowcount);
+    
+    CLOSE c_employee;
+END;
+/
+
+
