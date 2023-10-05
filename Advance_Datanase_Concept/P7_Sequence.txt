@@ -1,0 +1,72 @@
+1)Creating simple Sequences with clauses like START WITH, INCREMENT BY, MAXVALUE, MINVALUE, CYCLE | NOCYCLE, CACHE | NOCACHE, ORDER | NOORDER]
+
+Code:=
+-- Create a sequence
+CREATE SEQUENCE my_sequence
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 100
+MINVALUE 1
+CYCLE
+CACHE 10
+ORDER;
+
+-- Use the sequence to generate values
+SELECT my_sequence.NEXTVAL FROM dual; -- Generating the next value
+SELECT my_sequence.CURRVAL FROM dual; -- Retrieving the current value
+
+-- Generate more values
+SELECT my_sequence.NEXTVAL FROM dual;
+SELECT my_sequence.NEXTVAL FROM dual;
+
+-- Drop the sequence when done
+DROP SEQUENCE my_sequence;
+
+
+Output: 
+Sequence created.
+NEXTVAL
+1
+Sequence dropped.
+
+
+2) Creating and using Sequences for tables.
+code=
+-- Create a sequence for generating customer IDs
+CREATE SEQUENCE customer_id_seq;
+-- Create a table for customer information and use the sequence for the primary key
+CREATE TABLE customers (
+    customer_id NUMBER DEFAULT customer_id_seq.NEXTVAL PRIMARY KEY,
+    first_name VARCHAR2(50),
+    last_name VARCHAR2(50)
+);
+-- Insert data into the customers table without specifying a value for customer_id
+INSERT INTO customers (first_name, last_name) VALUES ('John', 'Doe');
+INSERT INTO customers (first_name, last_name) VALUES ('Alice', 'Smith');
+-- Select data from the customers table
+SELECT * FROM customers;
+-- Drop the table and sequence when done
+DROP TABLE customers;
+DROP SEQUENCE customer_id_seq;
+
+output=
+Sequence created.
+Table created.
+1 row(s) inserted.
+1 row(s) inserted.
+
+CUSTOMER_ID
+FIRST_NAME
+LAST_NAME
+1
+John
+Doe
+2
+Alice
+Smith
+
+2 rows selected.
+Table dropped.
+Sequence dropped.
+
+
