@@ -1,0 +1,56 @@
+A] Write a PL/SQL block to create a function to find maximum of two numbers.
+
+CREATE OR REPLACE FUNCTION find_maximum(num1 NUMBER, num2 NUMBER)
+RETURN NUMBER
+IS
+   max_num NUMBER;
+BEGIN
+   IF num1 > num2 THEN
+      max_num := num1;
+   ELSE
+      max_num := num2;
+   END IF;
+   
+   RETURN max_num;
+END;
+/
+DECLARE
+    max_value NUMBER;
+BEGIN
+    max_value := find_maximum(10, 10);
+    DBMS_OUTPUT.PUT_LINE('MAX VALUE: ' || max_value);
+END;
+/
+B] Write a PL/SQL block to create a function to find square of a number.
+
+DECLARE
+    my_value NUMBER := 5;
+    squared_numbers NUMBER;
+BEGIN
+squared_numbers := calculate_square(my_value);
+DBMS_OUTPUT.PUT_LINE('The square of : ' || my_value||' is '||squared_numbers);
+END;
+/
+
+C] Write a PL/SQL block to create a function to find the total strength of Students using functions present in different departments.
+
+D] Writing a recursive Functions in PL/SQL Block.
+DECLARE
+   FUNCTION factorial(n NUMBER) RETURN NUMBER IS
+   BEGIN
+      IF n = 0 THEN
+         RETURN 1;
+      ELSE
+         RETURN n * factorial(n - 1);
+      END IF;
+   END factorial;
+BEGIN
+   DECLARE
+      result NUMBER;
+   BEGIN
+      result := factorial(5);
+      DBMS_OUTPUT.PUT_LINE('Factorial of 5 is ' || result);
+   END;
+END;
+/
+ 
