@@ -1,0 +1,59 @@
+
+(A) Aim: Writing PL/SQL Blocks with basic programming constructs by including a GOTO to jump out of a loop and NULL as a statement inside IF.
+set serveroutput on;
+DECLARE
+ counter NUMBER := 1;
+BEGIN
+ -- Looping construct
+LOOP
+  -- IF statement with NULL as a statement
+ IF counter <= 5 THEN
+ DBMS_OUTPUT.PUT_LINE('Counter: ' || counter);
+ counter := counter + 1;
+ ELSE
+ NULL; -- NULL statement
+ EXIT; -- Exit the loop using GOTO
+  END IF;
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('Loop finished');
+ END;
+/
+
+(B) Aim: Writing PL/SQL Blocks with basic programming constructs by including a GOTO to jump out of a loop.
+DECLARE
+ counter NUMBER := 1;
+ BEGIN
+ -- Looping construct
+ <<my_loop>>
+ LOOP
+  -- Print counter value
+ DBMS_OUTPUT.PUT_LINE('Counter: ' || counter);
+-- Increment counter
+counter := counter + 1;
+ -- Check if counter exceeds a limit
+IF counter > 5 THEN
+GOTO my_exit; -- Jump out of the loop
+ END IF;
+  END LOOP my_loop;
+<<my_exit>> -- Label to jump to
+DBMS_OUTPUT.PUT_LINE('Loop finished');
+END;
+ /
+
+(C) Aim: Writing PL/SQL Blocks to demonstrate a Simple GOTO Statement.
+ DECLARE
+counter NUMBER := 1;
+BEGIN
+ <<my_loop>>
+LOOP
+DBMS_OUTPUT.PUT_LINE('Counter: ' || counter);
+  counter := counter + 1;
+  IF counter > 5 THEN
+GOTO my_exit;
+END IF;
+ END LOOP my_loop;
+ <<my_exit>>
+DBMS_OUTPUT.PUT_LINE('Loop finished');
+  END;
+  /
+

@@ -1,0 +1,136 @@
+1. Create a procedure to swap numbers.
+
+DECLARE
+  num1 NUMBER := 5;
+  num2 NUMBER := 10;
+  swapped_num1 NUMBER;
+  swapped_num2 NUMBER;
+  BEGIN
+  DBMS_OUTPUT.PUT_LINE('Before swapping: num1 = ' || num1 || ', num2 = ' || num2);
+  swap_numbers(num1, num2, swapped_num1, swapped_num2);
+  DBMS_OUTPUT.PUT_LINE('After swapping: num1 = ' || swapped_num1 || ', num2 = ' || swapped_num2);
+  END;
+  /
+
+2. Create a procedure to find minimum of two numbers.
+
+CREATE OR REPLACE PROCEDURE find_minimum(
+ num1 IN NUMBER,
+ num2 IN NUMBER,
+  min_result OUT NUMBER
+  ) AS
+  BEGIN
+  IF num1 < num2 THEN
+   min_result := num1;
+   ELSE
+   min_result := num2;
+   END IF;
+   END find_minimum;
+    /
+DECLARE
+     result NUMBER;
+ BEGIN
+  find_minimum(10, 5, result); 
+   DBMS_OUTPUT.PUT_LINE('Minimum value: ' || result);
+  END;
+  /
+
+3. create a stored procedure and call it
+
+CREATE OR REPLACE PROCEDURE my_stored_procedure AS
+ BEGIN
+ DBMS_OUTPUT.PUT_LINE('Hello from the stored procedure!');
+  END my_stored_procedure;
+  /
+
+BEGIN
+   my_stored_procedure; -- Calling the stored procedure we created
+END;
+  /
+
+ CREATE TABLE employee(
+  employee_id NUMBER,
+   first_name VARCHAR2(50),
+   last_name VARCHAR2(50),
+   salary NUMBER
+   );
+
+4. define procedure to insert data.
+ CREATE OR REPLACE PROCEDURE
+   insert_employee(
+    p_employee_id NUMBER,
+    p_first_name VARCHAR2,
+    p_last_name VARCHAR2,
+    p_salary NUMBER
+   )AS
+   BEGIN
+    INSERT INTO employee(employee_id,first_name,last_name,salary)
+   VALUES (p_employee_id,p_first_name,p_last_name,P_salary);
+   COMMIT;
+   DBMS_OUTPUT.PUT_LINE('Employee data inserted successfully.');
+   EXCEPTION
+   WHEN OTHERS THEN
+   ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Error inserting employee data: ' || SQLERRM);
+  END insert_employee;
+  /
+
+ BEGIN
+   insert_employee(1, 'John', 'Doe', 50000);
+   END;
+   /
+--To view the table data 
+select *from employee;
+
+5. define procedure to update data.
+
+--First we have to create procedure and insert values like 4th program
+CREATE OR REPLACE PROCEDURE
+   insert_employee(
+    p_employee_id NUMBER,
+    p_first_name VARCHAR2,
+    p_last_name VARCHAR2,
+    p_salary NUMBER
+   )AS
+   BEGIN
+    INSERT INTO employee(employee_id,first_name,last_name,salary)
+   VALUES (p_employee_id,p_first_name,p_last_name,P_salary);
+   COMMIT;
+   DBMS_OUTPUT.PUT_LINE('Employee data inserted successfully.');
+   EXCEPTION
+   WHEN OTHERS THEN
+   ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Error inserting employee data: ' || SQLERRM);
+  END insert_employee;
+  /
+
+ BEGIN
+   insert_employee(1, 'John', 'Doe', 60000);
+   insert_employee(2, 'John', 'wick', 50000);
+   END;
+   /
+
+--Now we create a procedure to update values 
+CREATE OR REPLACE PROCEDURE update_employee(
+    p_employee_id NUMBER,
+    p_new_salary NUMBER
+) AS
+BEGIN
+    UPDATE employee
+    SET salary = p_new_salary
+    WHERE employee_id = p_employee_id;
+    
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Employee data updated successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        DBMS_OUTPUT.PUT_LINE('Error updating employee data: ' || SQLERRM);
+END update_employee;
+/
+BEGIN
+    update_employee(1, 55000);
+END;
+/
+select *from employee;
+

@@ -1,0 +1,57 @@
+A. Write a PL/SQL program to print number from 1 to 5 using WHILE loop statement.
+
+DECLARE
+        counter NUMBER := 1;
+    BEGIN
+        WHILE counter <= 5 LOOP
+            DBMS_OUTPUT.PUT_LINE('Number: ' || counter);
+            counter := counter + 1;
+        END LOOP;
+    END;
+    /
+
+B. Write a PL/SQL program to print the odd numbers between 1 to 10 using the while loop.
+
+DECLARE
+        counter NUMBER := 1;
+    BEGIN
+        WHILE counter <= 10 LOOP
+            IF MOD(counter, 2) = 1 THEN
+                DBMS_OUTPUT.PUT_LINE('Odd Number: ' || counter);
+            END IF;
+            counter := counter + 1;
+        END LOOP;
+   END;
+   /
+C. Write a PL/SQL program to print the numbers between 1 to N using the while loop.
+
+ DECLARE
+        n NUMBER := 10; -- Change this value to your desired N
+        counter NUMBER := 1;
+    BEGIN
+        WHILE counter <= n LOOP
+            DBMS_OUTPUT.PUT_LINE('Number: ' || counter);
+            counter := counter + 1;
+        END LOOP;
+    END;
+   /
+
+
+--For loop
+
+A. Write a PL/SQL program to print numbers from 1 to 10 using FOR loop statement.
+
+BEGIN
+  FOR counter IN 1..10 LOOP
+ DBMS_OUTPUT.PUT_LINE('Number: ' || counter);
+  END LOOP;
+  END;
+   /
+B. Write a PL/SQL program to print the number in reverse order.
+
+BEGIN
+  FOR counter IN REVERSE 1..10 LOOP
+  DBMS_OUTPUT.PUT_LINE('Number: ' || counter);
+  END LOOP;
+ END;
+  /
