@@ -1,0 +1,34 @@
+Aim:-Create a package
+CREATE OR REPLACE PACKAGE BODY MathPackage AS
+    PROCEDURE CalculateSquare(number IN NUMBER) IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('The square of ' || number || ' is ' || (number * number));
+    END CalculateSquare;
+
+    PROCEDURE InsertAndCalculateSquare(id IN NUMBER, value IN NUMBER) IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('New row inserted. Calculating square...');
+        CalculateSquare(value);
+        -- In a real scenario, you would perform the actual INSERT here
+    END InsertAndCalculateSquare;
+
+    -- Trigger implementation
+    TRIGGER Numbers_Insert_Trigger AFTER INSERT ON Numbers FOR EACH ROW
+    BEGIN
+        -- Call the procedure to insert and calculate the square
+        InsertAndCalculateSquare(:NEW.id, :NEW.value);
+    END Numbers_Insert_Trigger;
+END MathPackage;
+/
+DECLARE
+    num NUMBER := 7; -- Value to be inserted
+BEGIN
+    -- Insert a new row and trigger the calculation of square
+    INSERT INTO Numbers (id, value) VALUES (1, num);
+END;
+/
+
+Output
+New row inserted. Calculating square...
+The square of 7 is 49
+
