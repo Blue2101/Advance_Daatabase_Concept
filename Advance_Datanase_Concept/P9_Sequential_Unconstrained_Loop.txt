@@ -1,29 +1,49 @@
 1) sequential statement
 code=
--- PL/SQL program with a sequential statement
-
-BEGIN
-    -- Display "Hello, World!" message
-    DBMS_OUTPUT.PUT_LINE('Hello, World!');
+DECLARE
+-- Declare Variables  
+num 1 Number :=10;
+num 2 Number :=5;
+result Number;
+BEGIN 
+result := num 1 + num 2;
+DBMS_output.put_line ('Addition :'|| result);
+result := num 1 - num 2;
+DBMS_output.put_line ('Subtraction :'|| result);
+result := num 1 * num 2;
+DBMS_output.put_line ('Multiplication :'|| result);
+IF num1 > num2 THEN
+DBMS_output.put_line
+('num1 is greater than or equal to num 2');
+Else
+DBMS_output.put_line
+('num2 is greater than or equal to num 1');
+END IF;
+-- use loops
+For i in 1..5 Loop
+DBMS_output.put_line
+('Loop iteration ' || i);
+END Loop
 END;
 /
 
 
 2)  Unconstrained loop(infinite loop)
 code=
--- PL/SQL program with an unconstrained loop
-
 DECLARE
-    counter NUMBER := 1;
-
+   counter NUMBER := 1;
 BEGIN
-    -- Infinite loop
-    LOOP
-        -- Display the current value of the counter
-        DBMS_OUTPUT.PUT_LINE('Counter: ' || counter);
-        
-        -- Increment the counter
-        counter := counter + 1;
-    END LOOP;
+   -- This is an unconstrained loop, which continues indefinitely until a condition inside the loop is met.
+   LOOP
+      -- Some code here
+
+      -- Exit the loop when a certain condition is met
+      IF counter >= 10 THEN
+         EXIT;
+      END IF;
+
+      -- Increment the counter
+      counter := counter + 1;
+   END LOOP;
 END;
 /
