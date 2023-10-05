@@ -1,0 +1,29 @@
+1) sequential statement
+code=
+-- PL/SQL program with a sequential statement
+
+BEGIN
+    -- Display "Hello, World!" message
+    DBMS_OUTPUT.PUT_LINE('Hello, World!');
+END;
+/
+
+
+2)  Unconstrained loop(infinite loop)
+code=
+-- PL/SQL program with an unconstrained loop
+
+DECLARE
+    counter NUMBER := 1;
+
+BEGIN
+    -- Infinite loop
+    LOOP
+        -- Display the current value of the counter
+        DBMS_OUTPUT.PUT_LINE('Counter: ' || counter);
+        
+        -- Increment the counter
+        counter := counter + 1;
+    END LOOP;
+END;
+/
